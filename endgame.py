@@ -1,10 +1,9 @@
-import requests
-import argparse
-
+from get_data import *
 
 methods = {
     'get': lambda url: requests.get(url),
-    'post': lambda url, data: requests.post(url, data)
+    'post': lambda url, data: requests.post(url, data),
+    'put': lambda url, data: requests.put(url, data)
 }
 
 
@@ -19,18 +18,10 @@ def check_args(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="Work with api")
-    parser.add_argument('--method', type=str)
-    parser.add_argument('--endpoint', type=str)
-    parser.add_argument('--params', type=str)
-    args = parser.parse_args()
+    args = get_parser()
+    if not args.method:
+        args.method = 'get'
     check = check_args(args)
-    try:
-        if args.endpoint:
-            if args.method in methods:
-                response = methods[args.method](args.endpoint)
-                print(response.status_code)
-    except requests.RequestException as e:
-        print(e)
+    print(get_data(args, methods))
 
 
